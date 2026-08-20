@@ -1,21 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My 3D Model</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   <style>
-    body { margin: 0; }
-    model-viewer { width: 100vw; height: 100vh; background: #f5f5f5; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      overflow: hidden;
+    }
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+      background: #f5f5f5;
+      --poster-color: transparent;
+    }
+
+    #panel {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 260px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #222;
+    }
+    #panel h3 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .segment-row {
+      margin-bottom: 14px;
+    }
+    .segment-row label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .segment-row .swatch {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+    .segment-row .name-wrap {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .segment-row .name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .segment-row .value {
+      color: #666;
+      font-variant-numeric: tabular-nums;
+      margin-left: 8px;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: #333;
+    }
+    #status {
+      font-size: 12px;
+      color: #888;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
-  <model-viewer 
-    src="Untitled.glb" 
-    camera-controls 
-    auto-rotate 
+
+  <model-viewer
+    id="viewer"
+    src="Model1.glb"
+    camera-controls
+    auto-rotate
     shadow-intensity="1"
     alt="3D anatomical model">
   </model-viewer>
+
+  <div id="panel">
+    <h3>Segment Opacity</h3>
+    <div id="sliders">
+      <div id="status">Loading model…</div>
+    </div>
+  </div>
+
+  <script>
+    const viewer = document.getElementById('viewer');
+    const sliderContainer = document.getElementById('sliders');
+
+    viewer.addEventListener('load', () => {
+      const materials = viewer.model.materials;
+      sliderContainer.innerHTML = '';
+
+      if (!materials || materials.length === 0) {
+        sliderContainer.innerHTML = '<div id="status">No materials found.</div>';
+        return;
+      }
+
+      materials.forEach((material, index) => {
+        // Ensure alpha blending is enabled so opacity actually takes effect
+        material.setAlphaMode('BLEND');
+
+        const baseColor = material.pbrMetallicRoughness.baseColorFactor;
+        const [r, g, b, a] = baseColor;
+        const swatchColor = `rgb(${Math.round(r*255)}, ${Math.round(g*255)}, ${Math.round(b*255)})`;
+        const name = material.name || `Segment ${index + 1}`;
+
+        const row = document.createElement('div');
+        row.className = 'segment-row';
+        row.innerHTML = `
+          <label>
+            <span class="name-wrap">
+              <span class="swatch" style="background:${swatchColor}"></span>
+              <span class="name">${name}</span>
+            </span>
+            <span class="value">${Math.round(a * 100)}%</span>
+          </label>
+          <input type="range" min="0" max="100" value="${Math.round(a * 100)}">
+        `;
+
+        const slider = row.querySelector('input');
+        const valueLabel = row.querySelector('.value');
+
+        slider.addEventListener('input', (e) => {
+          const newAlpha = parseInt(e.target.value, 10) / 100;
+          const current = material.pbrMetallicRoughness.baseColorFactor;
+          material.pbrMetallicRoughness.setBaseColorFactor([current[0], current[1], current[2], newAlpha]);
+          valueLabel.textContent = `${e.target.value}%`;
+        });
+
+        sliderContainer.appendChild(row);
+      });
+    });
+
+    viewer.addEventListener('error', (e) => {
+      sliderContainer.innerHTML = `<div id="status">Error loading model: ${e.detail?.type || 'unknown'}</div>`;
+    });
+  </script>
+
 </body>
 </html>
