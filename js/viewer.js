@@ -157,10 +157,10 @@ viewer.addEventListener("load", () => {
 
   status.textContent = "";
 
-  viewer.cameraTarget = "191.11328125m 215.234375m 133.5m";
-  viewer.cameraOrbit =
-    "0.029856741164000212rad 2.662640764083959rad 496.52395340944577m";
-  viewer.fieldOfView = "30deg";
+  // viewer.cameraTarget = "191.11328125m 215.234375m 133.5m";
+  // viewer.cameraOrbit =
+  //   "0.029856741164000212rad 2.662640764083959rad 496.52395340944577m";
+  // viewer.fieldOfView = "30deg";
 
   requestAnimationFrame(() => {
     mainCameraReady = true;
