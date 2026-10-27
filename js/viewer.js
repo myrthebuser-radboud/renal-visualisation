@@ -1,45 +1,13 @@
-
 const viewer = document.querySelector("#viewer");
 const controls = document.querySelector("#controls");
 const status = document.querySelector("#status");
 const panel = document.querySelector("#panel");
 const orientationViewer = document.querySelector("#orientation-viewer");
 
-
-orientationViewer.addEventListener("load", () => {
-  orientationReady = true;
-  syncOrientationView();
-});
-
-
-
-function syncOrientationView() {
-  if (!mainCameraReady || !orientationReady || syncingCamera) return;
-
-  syncingCamera = true;
-
-  const mainOrbit = viewer.getCameraOrbit();
-  const guideOrbit = orientationViewer.getCameraOrbit();
-
-  const verticalOffset = 0.1;
-
-  orientationViewer.cameraOrbit =
-    `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
-
-  syncingCamera = false;
-}
-  orientationViewer.cameraOrbit =
-  `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
-  console.log("Person camera after:", orientationViewer.getCameraOrbit().theta,
-  orientationViewer.getCameraOrbit().phi);
-  syncingCamera = false;
-}
-
-viewer.addEventListener("camera-change", syncOrientationView);
-
 let orientationReady = false;
 let syncingCamera = false;
 let mainCameraReady = false;
+
 const COLORS = {
   Kidney: "#be6955",
   Cystic: "#50a0f0",
@@ -51,16 +19,36 @@ const COLORS = {
 const LABELS = {
   Kidney: "Kidney",
   Cystic: "Simple cyst",
-  Solid: "Suspicious  mass",
+  Solid: "Suspicious mass",
   Artery: "Feeding blood vessels",
   Veins: "Draining blood vessels",
 };
+
+function syncOrientationView() {
+  if (!mainCameraReady || !orientationReady || syncingCamera) return;
+
+  syncingCamera = true;
+
+  const mainOrbit = viewer.getCameraOrbit();
+  const guideOrbit = orientationViewer.getCameraOrbit();
+
+  orientationViewer.cameraOrbit =
+    `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
+
+  syncingCamera = false;
+}
+
+orientationViewer.addEventListener("load", () => {
+  orientationReady = true;
+  syncOrientationView();
+});
+
+viewer.addEventListener("camera-change", syncOrientationView);
 
 function setMaterialOpacity(material, opacity) {
   const pbr = material.pbrMetallicRoughness;
   const color = Array.from(pbr.baseColorFactor);
 
-  // Preserve the material's RGB color and change only its opacity.
   pbr.setBaseColorFactor([
     color[0],
     color[1],
@@ -73,13 +61,14 @@ function createSegmentControl(material) {
   const name = material.name || "Unnamed segmentation";
   const displayName = LABELS[name] || name;
   const initialColor = COLORS[name] || "#888888";
+
   const initialFactor = Array.from(
     material.pbrMetallicRoughness.baseColorFactor
   );
+
   const initialOpacity =
-  name === "Kidney" ? 0.2 : (initialFactor[3] ?? 1);
-  
-  // Ensure opacity changes are supported by the material.
+    name === "Kidney" ? 0.2 : (initialFactor[3] ?? 1);
+
   material.setAlphaMode("BLEND");
 
   const row = document.createElement("section");
@@ -132,8 +121,6 @@ function createSegmentControl(material) {
 
   function updateOpacity() {
     const opacity = Number(slider.value) / 100;
-
-    // A hidden segmentation has zero opacity.
     setMaterialOpacity(material, visible ? opacity : 0);
     value.textContent = `${slider.value}%`;
   }
@@ -147,25 +134,11 @@ function createSegmentControl(material) {
 
   controlsRow.append(slider, visibilityLabel);
   row.append(heading, controlsRow);
+
   updateOpacity();
+
   return row;
-  
 }
-
-// function addResetButton() {
-//   const button = document.createElement("button");
-//   button.id = "reset-view";
-//   button.type = "button";
-//   button.textContent = "Reset camera view";
-
-//   button.addEventListener("click", () => {
-//     viewer.cameraTarget = "auto auto auto";
-//     viewer.cameraOrbit = "auto auto auto";
-//     viewer.fieldOfView = "auto";
-//   });
-
-//   panel.append(button);
-// }
 
 viewer.addEventListener("load", () => {
   controls.replaceChildren();
@@ -182,31 +155,18 @@ viewer.addEventListener("load", () => {
     controls.append(createSegmentControl(material));
   }
 
+  status.textContent = "";
 
-//   addResetButton();
-  status.textContent = ` `;
-  
-viewer.cameraTarget = "191.11328125m 215.234375m 133.5m";
-viewer.cameraOrbit = "0.029856741164000212rad 2.662640764083959rad 496.52395340944577m";
-viewer.fieldOfView = "30deg";
+  viewer.cameraTarget = "191.11328125m 215.234375m 133.5m";
+  viewer.cameraOrbit =
+    "0.029856741164000212rad 2.662640764083959rad 496.52395340944577m";
+  viewer.fieldOfView = "30deg";
 
-requestAnimationFrame(() => {
-  mainCameraReady = true;
-  syncOrientationView();
+  requestAnimationFrame(() => {
+    mainCameraReady = true;
+    syncOrientationView();
+  });
 });
-
-
-
-// orientationViewer.addEventListener("load", () => {
-//   console.log("Orientation figure loaded.");
-//   orientationReady = true;
-
-//   orientationViewer.cameraTarget = "auto auto auto";
-//   orientationViewer.cameraOrbit = "-5rad 5rad 3m";
-//   orientationViewer.fieldOfView = "35deg";
-
-//   syncOrientationView();
-// });
 
 viewer.addEventListener("error", (event) => {
   console.error("Model loading error:", event);
