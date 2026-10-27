@@ -43,7 +43,7 @@ orientationViewer.addEventListener("load", () => {
   syncOrientationView();
 });
 
-viewer.addEventListener("camera-change", syncOrientationView);
+// viewer.addEventListener("camera-change", syncOrientationView);
 
 function setMaterialOpacity(material, opacity) {
   const pbr = material.pbrMetallicRoughness;
