@@ -24,19 +24,23 @@ const LABELS = {
   Veins: "Draining blood vessels",
 };
 
+
 function syncOrientationView() {
   if (!mainCameraReady || !orientationReady || syncingCamera) return;
 
   syncingCamera = true;
 
-  const mainOrbit = viewer.getCameraOrbit();
-  const guideOrbit = orientationViewer.getCameraOrbit();
+  try {
+    const mainOrbit = viewer.getCameraOrbit();
+    const guideOrbit = orientationViewer.getCameraOrbit();
 
-  orientationViewer.cameraOrbit =
-    `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
-
-  syncingCamera = false;
+    orientationViewer.cameraOrbit =
+      `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
+  } finally {
+    syncingCamera = false;
+  }
 }
+
 
 orientationViewer.addEventListener("load", () => {
   orientationReady = true;
