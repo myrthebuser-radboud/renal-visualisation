@@ -14,17 +14,20 @@ orientationViewer.addEventListener("load", () => {
 
 
 function syncOrientationView() {
-  if (!orientationReady || syncingCamera) return;
+  if (!mainCameraReady || !orientationReady || syncingCamera) return;
 
   syncingCamera = true;
 
   const mainOrbit = viewer.getCameraOrbit();
   const guideOrbit = orientationViewer.getCameraOrbit();
 
-  // A visual correction for the orientation guide only.
-  const verticalOffset = 0.1; // radians, about -8.6 degrees
-  console.log("Kidney camera:", mainOrbit.theta, mainOrbit.phi);
-  console.log("Person camera before:", guideOrbit.theta, guideOrbit.phi);
+  const verticalOffset = 0.1;
+
+  orientationViewer.cameraOrbit =
+    `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
+
+  syncingCamera = false;
+}
   orientationViewer.cameraOrbit =
   `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
   console.log("Person camera after:", orientationViewer.getCameraOrbit().theta,
@@ -36,6 +39,7 @@ viewer.addEventListener("camera-change", syncOrientationView);
 
 let orientationReady = false;
 let syncingCamera = false;
+let mainCameraReady = false;
 const COLORS = {
   Kidney: "#be6955",
   Cystic: "#50a0f0",
@@ -182,9 +186,14 @@ viewer.addEventListener("load", () => {
 //   addResetButton();
   status.textContent = ` `;
   
-  viewer.cameraTarget = "191.11328125m 215.234375m 133.5m";
-  viewer.cameraOrbit = "0.029856741164000212rad 2.662640764083959rad 496.52395340944577m";
-  viewer.fieldOfView = "30deg";
+viewer.cameraTarget = "191.11328125m 215.234375m 133.5m";
+viewer.cameraOrbit = "0.029856741164000212rad 2.662640764083959rad 496.52395340944577m";
+viewer.fieldOfView = "30deg";
+
+requestAnimationFrame(() => {
+  mainCameraReady = true;
+  syncOrientationView();
+});
 
 });
 
