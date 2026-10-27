@@ -35,7 +35,7 @@ function syncOrientationView() {
     const guideOrbit = orientationViewer.getCameraOrbit();
 
     orientationViewer.cameraOrbit =
-      `${mainOrbit.theta}rad ${mainOrbit.phi - 0.4}rad ${guideOrbit.radius}m`;
+      `${mainOrbit.theta}rad ${mainOrbit.phi - 0.2}rad ${guideOrbit.radius}m`;
   } finally {
     syncingCamera = false;
   }
