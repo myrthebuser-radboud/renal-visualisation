@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</main>
+</body>
+</html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Anatomical Segmentation Viewer</title>
+
+  <script
+    type="module"
+    src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js">
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/viewer.js" defer></script>
+</head>
+
+<main class="app">
+  <div class="warning-banner" role="alert">
+    ⚠️ Example Data — Not For Clinical Use!
+  </div>
+
+  <model-viewer
+    id="viewer"
+    src="models/Model_1.glb"
+    alt="Interactive 3D anatomical segmentation"
+    camera-controls
+    shadow-intensity="1"
+    exposure="1"
+    environment-image="neutral"
+    interaction-prompt="auto">
+  </model-viewer>
+
+  <aside id="info-panel" aria-label="Model information">
+    <h2>About this model</h2>
+    <p>
+      This is an example of a 3D model in a patient that has kidney cancer. Take your time to interact with it.
+    </p>
+
+    <h3>Structures</h3>
+    <ul>
+      <li><strong>Kidney:</strong> The two kidneys of a patient.</li>
+      <li><strong>Simple cyst:</strong> Simple cysts are small, fluid fild cavities that are usually not cancerous.</li>
+      <li><strong>Solid lesion:</strong> These are solid structures inside the kidney that are likely a cancer.</li>
+      <li><strong>Feeding vessels:</strong> These vessels feed the blood from your heart to your kidneys.</li>
+      <li><strong>Draining vessels:</strong> These vessels take the blood from your kidneys to your heart</li>
+    </ul>
+
+    <h3>How to interact</h3>
+    <p>
+      Click on the model and drag your curser to rotate, use the wheel of your mouse to zoom, and use
+      the controls on the right to change the transparency of the components of the model.
+    </p>
+      <div class="orientation-guide">
+    <h3>Where am I looking?</h3>
+    <model-viewer
+      id="orientation-viewer"
+      src="models/figure_with_kidneys.glb"
+      alt="3D human body showing kidney locations"
+      camera-target="auto auto auto"
+      camera-orbit="0deg 75deg auto"
+      field-of-view="35deg"
+      environment-image="neutral"
+      exposure="1"
+      interaction-prompt="none">
+    </model-viewer>
+    <p>Rotate the main model to explore the viewing direction.</p>
+  </div>
+  </aside>
+
+  <!-- EXISTING: Legend and controls on the right -->
+  <aside id="panel" aria-label="Segmentation controls">
+    <h1>Segmentations</h1>
+    <p class="subtitle">Adjust visibility and opacity</p>
+    <div id="status" role="status" aria-live="polite">
+      Loading 3D model…
+    </div>
+    <div id="controls"></div>
+  </aside>
+
+
+
+</main>
