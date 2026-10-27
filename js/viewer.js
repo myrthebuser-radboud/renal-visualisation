@@ -195,7 +195,7 @@ requestAnimationFrame(() => {
   syncOrientationView();
 });
 
-});
+
 
 // orientationViewer.addEventListener("load", () => {
 //   console.log("Orientation figure loaded.");
