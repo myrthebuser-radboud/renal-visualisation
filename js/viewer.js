@@ -74,7 +74,7 @@ function createSegmentControl(material) {
   );
 
   const initialOpacity =
-    name === "Kidney" ? 0.2 : (initialFactor[3] ?? 1);
+    name === "Kidney" ? 0.4 : (initialFactor[3] ?? 1);
 
   material.setAlphaMode("BLEND");
 
