@@ -12,7 +12,7 @@ const COLORS = {
   Kidney: "#be6955",
   Cystic: "#ccff66",
   Solid: "#33cc33",
-  Artery: "#0066cc",
+  Artery: "#dc3c3c",
   Veins: "#4664dc",
 };
 
