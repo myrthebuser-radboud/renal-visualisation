@@ -10,9 +10,9 @@ let mainCameraReady = false;
 
 const COLORS = {
   Kidney: "#be6955",
-  Cystic: "#50a0f0",
-  Solid: "#f0b446",
-  Artery: "#dc3c3c",
+  Cystic: "#ccff66",
+  Solid: "#33cc33",
+  Artery: "#0066cc",
   Veins: "#4664dc",
 };
 
@@ -35,7 +35,7 @@ function syncOrientationView() {
     const guideOrbit = orientationViewer.getCameraOrbit();
 
     orientationViewer.cameraOrbit =
-      `${mainOrbit.theta}rad ${mainOrbit.phi - 0.5}rad ${guideOrbit.radius}m`;
+      `${mainOrbit.theta}rad ${mainOrbit.phi - 0.7}rad ${guideOrbit.radius}m`;
   } finally {
     syncingCamera = false;
   }
