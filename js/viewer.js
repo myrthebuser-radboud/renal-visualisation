@@ -3,6 +3,7 @@ const controls = document.querySelector("#controls");
 const status = document.querySelector("#status");
 const panel = document.querySelector("#panel");
 const orientationViewer = document.querySelector("#orientation-viewer");
+const tooltip = document.querySelector("#hover-tooltip");
 
 let orientationReady = false;
 let syncingCamera = false;
@@ -23,6 +24,38 @@ const LABELS = {
   Artery: "Feeding blood vessels",
   Veins: "Draining blood vessels",
 };
+
+viewer.addEventListener("pointermove", (event) => {
+  const rect = viewer.getBoundingClientRect();
+
+  // Convert mouse coordinates to coordinates within the viewer.
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  // Identify the material underneath the mouse.
+  const material = viewer.materialFromPoint(x, y);
+
+  if (!material) {
+    tooltip.hidden = true;
+    return;
+  }
+
+  // Find the patient-friendly label.
+  const name = material.name;
+  const displayName = LABELS[name] || name;
+
+  // Display the tooltip.
+  tooltip.textContent = displayName;
+  tooltip.hidden = false;
+
+  // Position it next to the mouse.
+  tooltip.style.left = `${event.clientX + 12}px`;
+  tooltip.style.top = `${event.clientY + 12}px`;
+});
+
+viewer.addEventListener("pointerleave", () => {
+  tooltip.hidden = true;
+});
 
 
 function syncOrientationView() {
