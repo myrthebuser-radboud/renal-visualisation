@@ -269,3 +269,23 @@ h1 {
   font-size: 12px;
   line-height: 1.4;
 }
+
+
+#hover-tooltip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+
+  padding: 8px 12px;
+  background: rgba(30, 30, 30, 0.9);
+  color: white;
+
+  font-size: 14px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+#hover-tooltip[hidden] {
+  display: none;
+}
+
