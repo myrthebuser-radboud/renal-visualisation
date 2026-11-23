@@ -28,12 +28,15 @@ const LABELS = {
 viewer.addEventListener("pointermove", (event) => {
   const rect = viewer.getBoundingClientRect();
 
-  // Convert mouse coordinates to coordinates within the viewer.
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
+  // // Convert mouse coordinates to coordinates within the viewer.
+  // const x = event.clientX - rect.left;
+  // const y = event.clientY - rect.top;
 
   // Identify the material underneath the mouse.
-  const material = viewer.materialFromPoint(x, y);
+  const material = viewer.materialFromPoint(
+  event.clientX,
+  event.clientY
+);
 
   if (!material) {
     tooltip.hidden = true;
@@ -213,3 +216,4 @@ viewer.addEventListener("error", (event) => {
   status.textContent =
     "Could not load the 3D model. Check the model file path and browser console.";
 });
+
