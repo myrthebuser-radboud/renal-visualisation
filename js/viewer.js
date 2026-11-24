@@ -4,6 +4,8 @@ const status = document.querySelector("#status");
 const panel = document.querySelector("#panel");
 const orientationViewer = document.querySelector("#orientation-viewer");
 const tooltip = document.querySelector("#hover-tooltip");
+const HOVER_OPACITY_THRESHOLD = 0.10;
+const segmentOpacities = {};
 
 let orientationReady = false;
 let syncingCamera = false;
@@ -164,10 +166,12 @@ function createSegmentControl(material) {
 
   function updateOpacity() {
     const opacity = Number(slider.value) / 100;
-    setMaterialOpacity(material, visible ? opacity : 0);
+  
+    segmentOpacities[name] = visible ? opacity : 0;
+  
+    setMaterialOpacity(material, segmentOpacities[name]);
     value.textContent = `${slider.value}%`;
   }
-
   slider.addEventListener("input", updateOpacity);
 
   checkbox.addEventListener("change", () => {
