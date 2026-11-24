@@ -39,11 +39,19 @@ viewer.addEventListener("pointermove", (event) => {
   event.clientX,
   event.clientY
 );
-
-  if (!material) {
+    // Ignore structures that are effectively invisible.
+  if (
+    material &&
+    (segmentOpacities[material.name] ?? 1) <= HOVER_OPACITY_THRESHOLD
+  ) {
     tooltip.hidden = true;
     return;
   }
+  
+    if (!material) {
+      tooltip.hidden = true;
+      return;
+    }
 
   // Find the patient-friendly label.
   const name = material.name;
