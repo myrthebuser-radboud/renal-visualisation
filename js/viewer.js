@@ -26,7 +26,12 @@ const LABELS = {
   Artery: "Feeding blood vessels",
   Veins: "Draining blood vessels",
 };
-
+viewer.addEventListener("load", () => {
+  console.log("Model:", viewer.model);
+  console.log("Model methods:", Object.getOwnPropertyNames(
+    Object.getPrototypeOf(viewer.model)
+  ));
+});
 viewer.addEventListener("pointermove", (event) => {
   const rect = viewer.getBoundingClientRect();
 
